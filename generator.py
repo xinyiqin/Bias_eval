@@ -39,7 +39,7 @@ class Generator():
 
     def chat_completion(self,client,model,user_prompt,system_info='',n=1,max_tokens=1024, temperature=0.9, top_p=0.95, timeout=60):
         message=[]
-        if 'gpt' in model:
+        if 'gpt-3.5' in model:
             if system_info:
                 message.append({"role": "system","content": system_info})
             message.append({"role": "user","content": user_prompt})
