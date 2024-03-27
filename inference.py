@@ -112,7 +112,7 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,retry_
                                     break
                                 except:
                                     print('sleep 2s')
-                                    time.sleep(2) #sensechat 1 minimax 5
+                                    time.sleep(2) #sensechat 2 minimax 5
                                     cnt+=1
                     assert len(response)==5
                     result = {"id":row["id"],
