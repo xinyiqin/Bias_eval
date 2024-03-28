@@ -53,5 +53,5 @@ if __name__ == "__main__":
             f_combined.write(graph)
             f_combined.write('\n\n')
         for leaderboard in leaderboard_content:
-            f_combined.write(leaderboard_html)
+            f_combined.write(leaderboard)
             f_combined.write('\n\n')
