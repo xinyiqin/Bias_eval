@@ -40,7 +40,7 @@ def plot(dataset,data_path):
 
     # 更新布局
     fig.update_layout(
-        title=f'{dataset} Leaderboard',
+        title=f'{dataset.capitalize()} Leaderboard',
         polar=dict(
             radialaxis=dict(
                 visible=False,
@@ -97,7 +97,7 @@ def plot(dataset,data_path):
     </head>
     <body>
         
-        <h2>Model Performance Leaderboard</h2>
+        <h2> """+f"{dataset.capitalize()} Leaderboard"+"""</h2>
         """ + leaderboard_data.to_html() + """
     </body>
     </html>
