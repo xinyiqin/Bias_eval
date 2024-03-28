@@ -13,38 +13,38 @@ if __name__ == "__main__":
     eval_dir = args.eval_path
     datasets = args.dataset.split(' ')
     langs = args.lang.split(' ')
-    print(datasets)
 
     graph_content=[]
     leaderboard_content=[]
-    for dataset,lang in zip(datasets,langs):
-        # 用于存储所有模型的数据的列表
-        model_data = []
+    for dataset in datasets:
+        for lang in langs:
+            # 用于存储所有模型的数据的列表
+            model_data = []
 
-        # 遍历每个模型的目录
-        for model_name in os.listdir(eval_dir):
-            if not model_name.endswith('csv'):
-                model_path = os.path.join(eval_dir, model_name)
-                
-                if os.path.exists(os.path.join(model_path, f'{dataset}_{lang}.csv')):
-                    # 读取模型目录下的表格数据
-                    model_df = pd.read_csv(os.path.join(model_path, f'{dataset}_{lang}.csv'))
+            # 遍历每个模型的目录
+            for model_name in os.listdir(eval_dir):
+                if not model_name.endswith('csv'):
+                    model_path = os.path.join(eval_dir, model_name)
                     
-                    # 添加模型名称列
-                    model_df['Model'] = model_name
-                    
-                    # 将每个模型的数据添加到列表中
-                    model_data.append(model_df)
+                    if os.path.exists(os.path.join(model_path, f'{dataset}_{lang}.csv')):
+                        # 读取模型目录下的表格数据
+                        model_df = pd.read_csv(os.path.join(model_path, f'{dataset}_{lang}.csv'))
+                        
+                        # 添加模型名称列
+                        model_df['Model'] = model_name
+                        
+                        # 将每个模型的数据添加到列表中
+                        model_data.append(model_df)
 
-        # 合并所有模型的数据
-        combined_data = pd.concat(model_data, ignore_index=True)
+            # 合并所有模型的数据
+            combined_data = pd.concat(model_data, ignore_index=True)
 
-        # 保存合并后的数据到单个CSV文件
-        combined_data.to_csv(f'{eval_dir}/{dataset}_{lang}.csv', index=False)
+            # 保存合并后的数据到单个CSV文件
+            combined_data.to_csv(f'{eval_dir}/{dataset}_{lang}.csv', index=False)
 
-        html_content,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}_{lang}.csv')
-        graph_content.append(html_content)
-        leaderboard_content.append(leaderboard_html)
+            html_content,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}_{lang}.csv')
+            graph_content.append(html_content)
+            leaderboard_content.append(leaderboard_html)
 
     # 将排行榜数据写入 HTML 文件
 
