@@ -22,7 +22,7 @@ def prompt_template(all_choices, question, word="accurate",):
     return f"{question}\n\nA: {all_choices[0]}\nB: {all_choices[1]}\nC: {all_choices[2]}\n\nAnswer:"
 
 
-def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,retry_times):
+def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,args):
     if str(row['id'])+row['bias_type'] not in num_existing_result:
         try:
             user_prompt=prompt_map[idx]['prompt']
@@ -69,22 +69,27 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,retry_
                                 "label":label,
                             }
             retry=0
-            while retry<retry_times:
+            while retry<args.retry_times:
                 try:
-                    response = generator.chat_completion(client,model,user_prompt,n=5,max_tokens=256,temperature=0.7)
-                    result = {"id":row["id"],
-                            "dataset":dataset,
-                                "model":model,
-                                "bias_type":row["bias_type"],
-                                "lang":lang,
-                                "question":question,
-                                "A":{"sentence":choices[0][1],"label":choices[0][0]},
-                                "B":{"sentence":choices[1][1],"label":choices[1][0]},
-                                "C":{"sentence":choices[2][1],"label":choices[2][0]}, 
-                                "label":label,
-                                "response":response,}
-                    if model=='sensechat':
+                    if 'gpt'in model:
+                        response = generator.chat_completion(client,model,user_prompt,n=5,max_tokens=args.max_new_tokens,temperature=0.7)
                         time.sleep(2)
+                    # generate n results for one question
+                    else:
+                        response = generator.chat_completion(client,model,user_prompt,n=5,max_tokens=args.max_new_tokens,temperature=0.7)
+                        result = {"id":row["id"],
+                                "dataset":dataset,
+                                    "model":model,
+                                    "bias_type":row["bias_type"],
+                                    "lang":lang,
+                                    "question":question,
+                                    "A":{"sentence":choices[0][1],"label":choices[0][0]},
+                                    "B":{"sentence":choices[1][1],"label":choices[1][0]},
+                                    "C":{"sentence":choices[2][1],"label":choices[2][0]}, 
+                                    "label":label,
+                                    "response":response,}
+                        if model=='sensechat':
+                            time.sleep(2)
                     return prompt,result
                 except Exception as e:
                     print(str(e))
@@ -95,24 +100,25 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,retry_
         
         else:
             retry=0
-            while retry<retry_times:
+            user_prompt=user_prompt + '\n (Please only return your choice without explanation.)'
+            while retry<args.retry_times:
                 try:
                     if 'gpt'in model:
-                        response = generator.chat_completion(client,model,user_prompt,n=5,max_tokens=20,temperature=0.7)
+                        response = generator.chat_completion(client,model,user_prompt,n=5,max_tokens=args.max_new_tokens,temperature=0.7)
                         time.sleep(2)
                     # generate n results for one question
                     else:
                         response=[]
                         for _ in range(5):
                             cnt=0
-                            while cnt<=20:
+                            while cnt<=5:
                                 try:
-                                    response.append(generator.chat_completion(client,model,user_prompt,max_tokens=20,temperature=0.7))
-                                    time.sleep(5) #sensechat 1 minimax 5
+                                    response.append(generator.chat_completion(client,model,user_prompt,max_tokens=args.max_new_tokens,temperature=0.7))
+                                    time.sleep(1) #sensechat 1 minimax 5
                                     break
                                 except:
                                     print('sleep 2s')
-                                    time.sleep(5) #sensechat 2 minimax 5
+                                    time.sleep(1) #sensechat 2 minimax 5
                                     cnt+=1
                     assert len(response)==5
                     result = {"id":row["id"],
@@ -149,12 +155,12 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', default='stereoset', type=str)
     parser.add_argument('--lang', default='en', type=str)
     parser.add_argument('--num_workers', default=32, type=int)
-    parser.add_argument('--retry_times', default=10, type=int)
+    parser.add_argument('--retry_times', default=2, type=int)
+    parser.add_argument('--max_new_tokens', default=100, type=int)
     args = parser.parse_args()
 
     limit=args.limit
     num_workers = args.num_workers
-    retry_times = args.retry_times
     data_dir = args.data_path
     output_dir = args.output_path
     word = args.word
@@ -175,7 +181,7 @@ if __name__ == "__main__":
     Unknown.""".split("\n")
     unks = [unk.strip() for unk in unks]
 
-    if any([i in model for i in ['llama','internlm']]):
+    if any([i in model for i in ['llama','internlm','baichuan']]):
         generator=OpenGenerator()
     else:
         generator=Generator()
@@ -237,7 +243,7 @@ if __name__ == "__main__":
 
     print(f'Inference {model}...')
     with ThreadPoolExecutor(max_workers=num_workers) as executor:
-        futures = [executor.submit(generate_one,num_existing_result,index,row,lang,dataset,unks,prompt_map,retry_times) for index, row in enumerate(data)]
+        futures = [executor.submit(generate_one,num_existing_result,index,row,lang,dataset,unks,prompt_map,args) for index, row in enumerate(data)]
         write_index=0
         write_thread = threading.Thread(target=write_results)
         write_thread.start()
@@ -246,6 +252,6 @@ if __name__ == "__main__":
     
     write_thread.join()
 
-    if output_place==new_output_path:
+    if output_place==f"{output_dir}/{model}/{dataset}_{lang}_2.json":
         os.remove(output_path)
         os.rename(new_output_path, output_path)

@@ -1,9 +1,9 @@
 source global.sh
 
-MODEL=minimax #minimax/glm-4/sensechat/ernie/gpt-3.5/qwen-turbo/internlm2
-DATASET=bbq #stereoset/bbq/crowspairs
+MODEL=gpt-4-turbo #minimax/glm-4/sensechat/ernie/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125/qwen-turbo/internlm2/llama-13b
+DATASET=stereoset #stereoset/bbq/crowspairs
 LANG=en #en/zh
-NUM_WORKERS=1
+NUM_WORKERS=32
 
 python inference.py \
     --data-path ./data \
@@ -14,4 +14,5 @@ python inference.py \
     --dataset $DATASET \
     --lang $LANG \
     --num_workers $NUM_WORKERS \
-    # --limit 5
+    --max_new_tokens 100 \
+    # --limit 10

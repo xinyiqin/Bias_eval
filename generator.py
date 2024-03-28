@@ -7,7 +7,7 @@ import json
 
 class Generator():
     def build_client(self,model):
-        if model=='gpt-3.5':
+        if 'gpt' in model:
             openai.api_type = "azure"
             openai.api_base = os.getenv("OPENAI_BASE")
             openai.api_version = os.getenv("OPENAI_API_VERSION")
@@ -39,13 +39,17 @@ class Generator():
 
     def chat_completion(self,client,model,user_prompt,system_info='',n=1,max_tokens=1024, temperature=0.9, top_p=0.95, timeout=60):
         message=[]
-        if 'gpt-3.5' in model:
+        if 'gpt' in model:
+            mapping={'gpt-3.5-turbo-1106':"gpt-35-turbo-1106",
+                   'gpt-3.5-turbo-0125':"gpt-35-turbo-0125",
+                   'gpt-4-turbo':'gpt-4-turbo'}
+            model=mapping[model]
             if system_info:
                 message.append({"role": "system","content": system_info})
             message.append({"role": "user","content": user_prompt})
             response = client.ChatCompletion.create(
                     messages=message,
-                    engine="gpt-35-turbo-1106",
+                    engine=model,
                     temperature=temperature,
                     max_tokens=max_tokens,
                     top_p=top_p,
@@ -91,6 +95,7 @@ class Generator():
             }
             response = requests.post(self.url, headers=self.headers, json=request_body,timeout=timeout)
             response = response.json()
+            print(response)
             result = response["choices"][0]["messages"][0]["text"]
 
         elif 'glm-4' in model:

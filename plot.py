@@ -19,11 +19,12 @@ def plot(dataset,data_path):
     # 设置雷达图的参数
     angles = np.linspace(0, 360, len(features), endpoint=False).tolist()
     fig = go.Figure()
-
+    print(len(values))
     colors = [
         '#9966ff', '#ffce56', '#ff6384', '#36a2eb',
         '#3cb371', '#6ad79d', '#7a73d9', '#d973bf',
-        '#207fec', '#d54747', '#ee9822', '#20eeb4'
+        '#207fec', '#d54747', '#ee9822', '#20eeb4',
+        '#FF6666','#99CC66','#336633'
     ]
 
     for i in range(len(values)):
@@ -64,14 +65,13 @@ def plot(dataset,data_path):
     # 创建排行榜数据
     leaderboard_data = pd.read_csv(data_path)
     leaderboard_data['Rank'] = leaderboard_data["Total"].rank(ascending=False).astype(int)
-    ranks = leaderboard_data['Rank'].tolist()
     leaderboard_data.set_index('Rank', inplace=True)
+    leaderboard_data.sort_index(inplace=True)
     # 调整列的顺序，将“Total”列移动到第一列
     columns = leaderboard_data.columns.tolist()
     columns.insert(1, columns.pop(columns.index('Total')))
     leaderboard_data = leaderboard_data[columns]
-    leaderboard_data = pd.DataFrame(leaderboard_data.values, columns=columns, index=ranks)
-
+    print(leaderboard_data)
     leaderboard_html = """
     <!DOCTYPE html>
     <html>
@@ -102,15 +102,5 @@ def plot(dataset,data_path):
     </body>
     </html>
     """
-
-    # 将排行榜数据写入 HTML 文件
-    with open('./public/index.html', 'w') as f_combined:
-        # 读取第一个 HTML 文件内容并写入合并文件
-        f_combined.write(html_content)
-        
-        # 写入换行符以区分两个 HTML 内容
-        f_combined.write('\n\n')
-        
-        # 读取第二个 HTML 文件内容并写入合并文件
-        f_combined.write(leaderboard_html)
+    return html_content,leaderboard_html
 

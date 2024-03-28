@@ -1,7 +1,7 @@
 source global.sh
-
-MODEL=sensechat  #minimax/glm-4/sensechat/ernie/gpt-3.5
-DATASET=stereoset #stereoset/bbq/crowspairs
+# baichuan2-13b/internlm2-1-8b/internlm2-20b/llama-7b/llama-13b
+MODEL=gpt-4-turbo  #qwen-turbo/minimax/glm-4/sensechat/ernie/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125
+DATASET=crowspairs #stereoset/bbq/crowspairs
 LANG=en #en/zh
 
 python evaluate.py \
@@ -14,10 +14,4 @@ python evaluate.py \
     --dataset $DATASET \
     --lang $LANG \
     # --limit 5
-
-python evaluate_all.py \
-    --eval-path ./eval \
-    --model $MODEL \
-    --dataset $DATASET \
-    --lang $LANG \
 
