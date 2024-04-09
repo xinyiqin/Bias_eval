@@ -67,6 +67,8 @@ def plot(dataset,data_path):
     leaderboard_data['Rank'] = leaderboard_data["Total"].rank(ascending=False).astype(int)
     leaderboard_data.set_index('Rank', inplace=True)
     leaderboard_data.sort_index(inplace=True)
+
+    leaderboard_data = leaderboard_data.round(2)
     # 调整列的顺序，将“Total”列移动到第一列
     columns = leaderboard_data.columns.tolist()
     columns.insert(1, columns.pop(columns.index('Total')))
