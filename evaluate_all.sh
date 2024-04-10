@@ -1,7 +1,7 @@
 
 source global.sh
 
-DATASET="crowspairs stereoset" #stereoset/bbq/crowspairs
+DATASET="crowspairs stereoset bbq" #stereoset/bbq/crowspairs
 LANG=en #en/zh
 
 python evaluate_all.py \

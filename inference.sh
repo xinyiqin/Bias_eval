@@ -1,10 +1,10 @@
 source global.sh
 
-# llama2-chinese/llama-13b/llama2-70b/llama-7b/internlm2/
-MODEL=gemini #gemini/minimax/glm-4/sensechat/ernie/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125/qwen-turbo/
+# chinese-alpaca-2-7b/llama2-chinese/llama-13b/llama2-70b/llama-7b/internlm2/
+MODEL=openbuddy-70b #gemini/minimax/glm-4/sensechat/ernie/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125/qwen-turbo/
 DATASET=bbq #stereoset/bbq/crowspairs
 LANG=en #en/zh
-NUM_WORKERS=1
+NUM_WORKERS=32
 
 python inference.py \
     --data-path ./data \

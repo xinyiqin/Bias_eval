@@ -10,7 +10,7 @@ def plot(dataset,data_path):
     models = data['Model'].tolist()
     data.set_index('Model', inplace=True)
 
-    data = data[['Total'] + [col for col in data.columns if col != 'Total']]
+    data = data[['total'] + [col for col in data.columns if col != 'total']]
 
     # 提取特征和数值
     features = data.columns
@@ -24,7 +24,7 @@ def plot(dataset,data_path):
         '#9966ff', '#ffce56', '#ff6384', '#36a2eb',
         '#3cb371', '#6ad79d', '#7a73d9', '#d973bf',
         '#207fec', '#d54747', '#ee9822', '#20eeb4',
-        '#FF6666','#99CC66','#336633'
+        '#FF6666','#99CC66','#336633', '#2c8c31',
     ]
 
     for i in range(len(values)):
@@ -64,14 +64,15 @@ def plot(dataset,data_path):
     # 生成排行榜的HTML内容并应用样式
     # 创建排行榜数据
     leaderboard_data = pd.read_csv(data_path)
-    leaderboard_data['Rank'] = leaderboard_data["Total"].rank(ascending=False).astype(int)
+    print(leaderboard_data)
+    leaderboard_data['Rank'] = leaderboard_data["total"].rank(ascending=False).astype(int)
     leaderboard_data.set_index('Rank', inplace=True)
     leaderboard_data.sort_index(inplace=True)
 
     leaderboard_data = leaderboard_data.round(2)
     # 调整列的顺序，将“Total”列移动到第一列
     columns = leaderboard_data.columns.tolist()
-    columns.insert(1, columns.pop(columns.index('Total')))
+    columns.insert(1, columns.pop(columns.index('total')))
     leaderboard_data = leaderboard_data[columns]
     print(leaderboard_data)
     leaderboard_html = """

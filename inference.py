@@ -187,7 +187,7 @@ if __name__ == "__main__":
     Unknown.""".split("\n")
     unks = [unk.strip() for unk in unks]
 
-    if any([i in model for i in ['llama','internlm','baichuan','chatglm']]):
+    if any([i in model for i in ['openbuddy','alpaca','llama','internlm','baichuan','chatglm']]):
         generator=OpenGenerator()
     else:
         generator=Generator()
