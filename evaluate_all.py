@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
             # 保存合并后的数据到单个CSV文件
             combined_data.to_csv(f'{eval_dir}/{dataset}_{lang}.csv', index=False)
-
+            
             html_content,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}_{lang}.csv')
             graph_content.append(html_content)
             leaderboard_content.append(leaderboard_html)
