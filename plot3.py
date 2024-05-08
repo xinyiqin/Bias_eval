@@ -29,6 +29,7 @@ def plot(dataset,data_path):
 
     for i in range(len(models)):
         en_stats_data = en_values[i].tolist()
+        customdata=[f'{models[i]} - English'] * len(en_stats_data)  # 保存自定义数据
         fig.add_trace(go.Scatterpolar(
             r=en_stats_data,
             theta=angles,
@@ -37,9 +38,10 @@ def plot(dataset,data_path):
             legendgroup=models[i],
             line=dict(color=colors[i], width=3),  # 设置线条颜色
             marker=dict(color=colors[i], symbol='circle', size=8, line=dict(color='white', width=1.5)),  # 设置标记颜色
-            customdata=[f'{models[i]} - English'] * len(en_stats_data)  # 保存自定义数据
+            hovertemplate=f'%{customdata}<br>' + '<br>'.join([f'{feature}: %{en_stats_data[i]}' for i, feature in enumerate(features)]),
         ))
         zh_stats_data = zh_values[i].tolist()
+        customdata=[f'{models[i]} - Chinese'] * len(zh_stats_data),  # 保存自定义数据
         fig.add_trace(go.Scatterpolar(
             r=zh_stats_data,
             theta=angles,
@@ -48,7 +50,8 @@ def plot(dataset,data_path):
             legendgroup=models[i],
             line=dict(color=colors[i], width=3, dash='dash'),  # 设置线条颜色
             marker=dict(color=colors[i], symbol='circle', size=8, line=dict(color='white', width=1.5)),  # 设置标记颜色
-            customdata=[f'{models[i]} - Chinese'] * len(en_stats_data)  # 保存自定义数据
+            customdata=[f'{models[i]} - Chinese'] * len(en_stats_data),  # 保存自定义数据
+            hovertemplate=f'%{customdata}<br>' + '<br>'.join([f'{feature}: %{zh_stats_data[i]}' for i, feature in enumerate(features)]),
         ))
 
         # 更新布局
@@ -87,10 +90,6 @@ def plot(dataset,data_path):
             }
         ]
     )
-    fig.update_traces(
-        hovertemplate='%{customdata}<br>' + '<br>'.join([f'{feature}: %{{r{i+1}}}' for i, feature in enumerate(features)]),
-    )
-    
     html_content = fig.to_html(include_plotlyjs='cdn')
     # leaderboard_html = leaderboard_data.to_html()
 
