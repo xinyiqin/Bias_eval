@@ -43,6 +43,7 @@ def plot(dataset,data_path):
             theta=angles,
             mode='lines+markers',
             name=f'{models[i]} - Chinese',
+            legendgroup=models[i],
             line=dict(color=colors[i], width=3, dash='dash'),  # 设置线条颜色
             marker=dict(color=colors[i], symbol='circle', size=8, line=dict(color='white', width=1.5)),  # 设置标记颜色
         ))
