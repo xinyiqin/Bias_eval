@@ -29,7 +29,6 @@ def plot(dataset,data_path):
 
     for i in range(len(models)):
         en_stats_data = en_values[i].tolist()
-        customdata=[f'{models[i]} - English'] * len(en_stats_data)  # 保存自定义数据
         fig.add_trace(go.Scatterpolar(
             r=en_stats_data,
             theta=angles,
@@ -38,10 +37,9 @@ def plot(dataset,data_path):
             legendgroup=models[i],
             line=dict(color=colors[i], width=3),  # 设置线条颜色
             marker=dict(color=colors[i], symbol='circle', size=8, line=dict(color='white', width=1.5)),  # 设置标记颜色
-            hovertemplate=f'%{customdata}<br>' + '<br>'.join([f'{feature}: %{en_stats_data[i]}' for i, feature in enumerate(features)]),
+            hovertemplate=f'{models[i]} - English<br>' + '<br>'.join([f'{feature}: %{en_stats_data[i]}' for i, feature in enumerate(features)]),
         ))
         zh_stats_data = zh_values[i].tolist()
-        customdata=[f'{models[i]} - Chinese'] * len(zh_stats_data),  # 保存自定义数据
         fig.add_trace(go.Scatterpolar(
             r=zh_stats_data,
             theta=angles,
@@ -51,7 +49,7 @@ def plot(dataset,data_path):
             line=dict(color=colors[i], width=3, dash='dash'),  # 设置线条颜色
             marker=dict(color=colors[i], symbol='circle', size=8, line=dict(color='white', width=1.5)),  # 设置标记颜色
             customdata=[f'{models[i]} - Chinese'] * len(en_stats_data),  # 保存自定义数据
-            hovertemplate=f'%{customdata}<br>' + '<br>'.join([f'{feature}: %{zh_stats_data[i]}' for i, feature in enumerate(features)]),
+            hovertemplate=f'{models[i]} - Chinese<br>' + '<br>'.join([f'{feature}: %{zh_stats_data[i]}' for i, feature in enumerate(features)]),
         ))
 
         # 更新布局
