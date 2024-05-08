@@ -50,7 +50,7 @@ def plot(dataset,data_path):
 
         # 更新布局
     fig1.update_layout(
-        title='IFEval Leaderboard - loose accuracy',
+        title=f"English - {dataset.capitalize()} Leaderboard",
         polar=dict(
             radialaxis=dict(
                 visible=False,
@@ -69,7 +69,7 @@ def plot(dataset,data_path):
     )
 
     fig2.update_layout(
-        title='IFEval Leaderboard - strict accuracy',
+        title=f"Chinese - {dataset.capitalize()} Leaderboard",
         polar=dict(
             radialaxis=dict(
                 visible=False,
@@ -94,21 +94,6 @@ def plot(dataset,data_path):
     # 生成排行榜的HTML内容并应用样式
     # 创建排行榜数据
     leaderboard_data = pd.read_csv(data_path)
-    # print(leaderboard_data)
-    # leaderboard_data['Rank']=leaderboard_data['Model']
-    # leaderboard_data = leaderboard_data.pivot(index=["Model",'Rank'], columns="lang")
-    # leaderboard_data.columns = pd.MultiIndex.from_tuples([(col[0], col[1]) for col in leaderboard_data.columns])
-    # leaderboard_data.reset_index(inplace=True)
-    # leaderboard_data['Mean'] = leaderboard_data[[
-    #         ("total", "en"), 
-    #         ("total", "zh"), 
-    #         ]].mean(axis=1)
-    # leaderboard_data['Rank'] = leaderboard_data['Mean'].rank(ascending=False).astype(int)
-    # columns = leaderboard_data.columns.tolist()
-    # columns.insert(2, columns.pop(columns.index(('Mean', ''))))
-    # leaderboard_data = leaderboard_data[columns]
-    # leaderboard_data = leaderboard_data.sort_values('Rank')
-
     leaderboard_data['Rank_en']=leaderboard_data['Model']
     leaderboard_data['Rank_zh']=leaderboard_data['Model']
     leaderboard_data = leaderboard_data.pivot(index=["Model",'Rank_en','Rank_zh'], columns="lang")
