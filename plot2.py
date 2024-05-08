@@ -5,17 +5,17 @@ import plotly.graph_objects as go
 def plot(dataset,data_path):
     # 从CSV文件中读取数据
     data = pd.read_csv(data_path)
-
-    # 提取模型名称
-    data = data[['total'] + [col for col in data.columns if col != 'total']]
     print(dataset)
     print(data)
-    # 提取特征和数值
+    data = data[['total'] + [col for col in data.columns if col != 'total']]
+    data = data[['lang'] + [col for col in data.columns if col != 'lang']]
     models=data['Model'].unique().tolist()
     features = data.columns.tolist()
-    en_values = data[data['lang']=='en'].values
-    zh_values = data[data['lang']=='zh'].values
-    print(en_values.shape)
+    data.set_index('Model', inplace=True)
+    en_values = data[data['lang']=='en'].values[:, 1:]
+    zh_values = data[data['lang']=='zh'].values[:, 1:]
+    data.reset_index()
+    # print(en_values)
     # 设置雷达图的参数
     angles = np.linspace(0, 360, len(features), endpoint=False).tolist()
     fig1 = go.Figure()
@@ -112,7 +112,13 @@ def plot(dataset,data_path):
     leaderboard_data['Rank_en']=leaderboard_data['Model']
     leaderboard_data['Rank_zh']=leaderboard_data['Model']
     leaderboard_data = leaderboard_data.pivot(index=["Model",'Rank_en','Rank_zh'], columns="lang")
-    leaderboard_data.columns = pd.MultiIndex.from_tuples([(col[0], col[1]) for col in leaderboard_data.columns])
+
+    columns=list(leaderboard_data.columns)
+    columns.insert(0, columns.pop(columns.index(('total','zh'))))
+    columns.insert(0, columns.pop(columns.index(('total','en'))))
+    leaderboard_data=leaderboard_data[columns]
+    leaderboard_data.columns = pd.MultiIndex.from_tuples([(col[0], col[1]) for col in columns])
+
     leaderboard_data.reset_index(inplace=True)
     leaderboard_data['Rank_en'] = leaderboard_data[('total',"en")].rank(ascending=False).astype(int)
     leaderboard_data['Rank_zh'] = leaderboard_data[('total',"zh")].rank(ascending=False).astype(int)
