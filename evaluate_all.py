@@ -1,4 +1,4 @@
-from plot2 import plot
+from plot3 import plot
 import pandas as pd
 import os
 import argparse
@@ -43,22 +43,8 @@ if __name__ == "__main__":
         # 保存合并后的数据到单个CSV文件
         combined_data.to_csv(f'{eval_dir}/{dataset}.csv', index=False)
             
-    #     html_content,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}.csv')
-    #     graph_content.append(html_content)
-    #     leaderboard_content.append(leaderboard_html)
-
-    # # 将排行榜数据写入 HTML 文件
-
-    # with open('./leaderboard/index.html', 'w') as f_combined:
-    #     for graph in graph_content:
-    #         f_combined.write(graph)
-    #         f_combined.write('\n\n')
-    #     for leaderboard in leaderboard_content:
-    #         f_combined.write(leaderboard)
-    #         f_combined.write('\n\n')
-        html_content1,html_content2,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}.csv')
-        graph_content.append(html_content1)
-        graph_content.append(html_content2)
+        html_content,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}.csv')
+        graph_content.append(html_content)
         leaderboard_content.append(leaderboard_html)
 
     # 将排行榜数据写入 HTML 文件
@@ -70,3 +56,17 @@ if __name__ == "__main__":
         for leaderboard in leaderboard_content:
             f_combined.write(leaderboard)
             f_combined.write('\n\n')
+    #     html_content1,html_content2,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}.csv')
+    #     graph_content.append(html_content1)
+    #     graph_content.append(html_content2)
+    #     leaderboard_content.append(leaderboard_html)
+
+    # # 将排行榜数据写入 HTML 文件
+
+    # with open('./leaderboard/index.html', 'w') as f_combined:
+    #     for graph in graph_content:
+    #         f_combined.write(graph)
+    #         f_combined.write('\n\n')
+    #     for leaderboard in leaderboard_content:
+    #         f_combined.write(leaderboard)
+    #         f_combined.write('\n\n')
