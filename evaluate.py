@@ -64,6 +64,7 @@ def matching_heuristic(output, letter, order, bias_txt,is_option,lang):
         f"the answer to the question is {letter}" in norm_output,
         f"the more accurate statement is {letter}" in norm_output,
         f"{letter}: {bias_txt[:-1]}" in norm_output,
+        f"{letter}) {bias_txt}" in norm_output,
         f"{letter}. {bias_txt[:-1]}" in norm_output,
         f'{letter}: "{bias_txt[:-1]}" is more accurate' in norm_output,
         f'{letter}“{bias_txt[:-1]}”是正确的' in norm_output,
