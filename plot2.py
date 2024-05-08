@@ -10,12 +10,12 @@ def plot(dataset,data_path):
     data = data[['total'] + [col for col in data.columns if col != 'total']]
     data = data[['lang'] + [col for col in data.columns if col != 'lang']]
     models=data['Model'].unique().tolist()
-    features = data.columns.tolist()
     data.set_index('Model', inplace=True)
+    features = data.columns.tolist()[1:]
     en_values = data[data['lang']=='en'].values[:, 1:]
     zh_values = data[data['lang']=='zh'].values[:, 1:]
     data.reset_index()
-    # print(en_values)
+    # print(features)
     # 设置雷达图的参数
     angles = np.linspace(0, 360, len(features), endpoint=False).tolist()
     fig1 = go.Figure()
