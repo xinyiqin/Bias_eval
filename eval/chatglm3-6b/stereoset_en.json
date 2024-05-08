@@ -1,6 +1,5 @@
 [
     {
-        "word": "accurate",
         "data": "stereoset",
         "model": "chatglm3-6b",
         "self_consistency": 0.22867001254705144,
@@ -13,7 +12,7 @@
             "race": 7047,
             "profession": 4503,
             "gender": 1485,
-            "religion": 565
+            "religion": 570
         },
         "flip": false,
         "output_labels": [
@@ -36019,11 +36018,11 @@
                 -1
             ],
             [
-                null,
-                null,
-                null,
-                null,
-                null
+                -1,
+                -1,
+                -1,
+                -1,
+                -1
             ],
             [
                 1,
@@ -43446,11 +43445,11 @@
                 1
             ],
             [
-                null,
-                null,
-                null,
-                null,
-                null
+                1,
+                1,
+                1,
+                1,
+                1
             ],
             [
                 -1,

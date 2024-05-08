@@ -1,20 +1,19 @@
 source global.sh
 
-# chinese-alpaca-2-7b/llama2-chinese/llama-13b/llama2-70b/llama-7b/internlm2/
-MODEL=openbuddy-70b #gemini/minimax/glm-4/sensechat/ernie/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125/qwen-turbo/
+# internlm2-20b/internlm2-1-8b/qwen-7b/openbuddy-70b/chatglm3-6b/baichuan2-13b/chinese-alpaca-2-7b/llama2-chinese
+MODEL=llama2-chinese #gemini/minimax/glm-4/sensechat/ernie/gpt-4-turbo/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125/qwen-turbo/
 DATASET=bbq #stereoset/bbq/crowspairs
 LANG=en #en/zh
-NUM_WORKERS=32
+NUM_WORKERS=50
 
 python inference.py \
     --data-path ./data \
     --output-path ./expr \
     --prompt-path ./expr/prompt \
-    --word accurate \
     --model $MODEL \
     --dataset $DATASET \
     --lang $LANG \
     --num_workers $NUM_WORKERS \
     --max_new_tokens 100 \
     --retry_times 2 \
-    # --limit 10 \
+    # --limit 100 \
