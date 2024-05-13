@@ -23,7 +23,7 @@ def prompt_template(all_choices, question):
     return f"{question}\n\nA: {all_choices[0]}\nB: {all_choices[1]}\nC: {all_choices[2]}"
 
 
-def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,args):
+def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,answer_num,args):
     if str(row['id'])+row['bias_type'] not in num_existing_result:
         try:
             user_prompt=prompt_map[idx]['prompt']
@@ -36,9 +36,9 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,args):
 
         if not user_prompt:   
             if lang=='en':
-                data=row['original']
+                data=row['original'] if dataset!='cbbq' else row['translated']
             elif lang=='zh':
-                data=row['translated']
+                data=row['translated'] if dataset!='cbbq' else row['original']
                 for name,sentence in data.items():
                     if not sentence.endswith('。'):
                         data[name]=sentence+'。'
@@ -49,11 +49,11 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,args):
                 choices.append(('stereotype',data['context'] + data['sent_more']))
                 choices.append(('anti-stereotype',data['context'] + data['sent_less']))
                 choices.append(('unknown',random.choice(unks)))
-            elif dataset=="crowspairs" or dataset=="bbq":
+            elif dataset=="crowspairs" or dataset=="bbq" or dataset=='cbbq':
                 choices.append(('stereotype',data["sent_more"]))
                 choices.append(('anti-stereotype',data["sent_less"]))
                 choices.append(('unknown',random.choice(unks)))
-            random.shuffle(choices) 
+            random.shuffle(choices)
             lst=['A','B','C']
             label = lst[[index for index, tup in enumerate(choices) if tup[0] == 'unknown'][0]]
             if lang=='en':
@@ -77,11 +77,27 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,args):
             while retry<args.retry_times:
                 try:
                     if 'gpt'in model:
-                        response = generator.chat_completion(client,model,user_prompt,n=5,system_info=system_prompt,max_tokens=args.max_new_tokens,temperature=0.7)
+                        response = generator.chat_completion(user_prompt,n=answer_num,system_info=system_prompt,max_tokens=args.max_new_tokens,temperature=0.7)
                         time.sleep(2)
                     # generate n results for one question
                     else:
-                        response = generator.chat_completion(client,model,user_prompt,n=5,system_info=system_prompt,max_tokens=args.max_new_tokens,temperature=0.7)
+                        response=[]
+                        for _ in range(answer_num):
+                            cnt=0
+                            while cnt<=5:
+                                try:
+                                    response.append(generator.chat_completion(user_prompt,max_tokens=args.max_new_tokens,system_info=system_prompt,temperature=0.7))
+                                    time.sleep(1) #sensechat 1 minimax 5
+                                    break
+                                except genai.types.generation_types.BlockedPromptException as e:
+                                    print('gemini block')
+                                    break
+                                except Exception as e:
+                                    print('sleep 2s')
+                                    print(str(e))
+                                    time.sleep(1) #sensechat 2 minimax 5
+                                    cnt+=1
+                    assert len(response)==answer_num
                     result = {"id":row["id"],
                                 "dataset":dataset,
                                 "model":model,
@@ -113,16 +129,16 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,args):
             while retry<args.retry_times:
                 try:
                     if 'gpt'in model:
-                        response = generator.chat_completion(client,model,user_prompt,n=5,max_tokens=args.max_new_tokens,system_info=system_prompt,temperature=0.7)
+                        response = generator.chat_completion(user_prompt,n=answer_num,max_tokens=args.max_new_tokens,system_info=system_prompt,temperature=0.7)
                         time.sleep(2)
                     # generate n results for one question
                     else:
                         response=[]
-                        for _ in range(5):
+                        for _ in range(answer_num):
                             cnt=0
                             while cnt<=5:
                                 try:
-                                    response.append(generator.chat_completion(client,model,user_prompt,max_tokens=args.max_new_tokens,system_info=system_prompt,temperature=0.7))
+                                    response.append(generator.chat_completion(user_prompt,max_tokens=args.max_new_tokens,system_info=system_prompt,temperature=0.7))
                                     time.sleep(1) #sensechat 1 minimax 5
                                     break
                                 except genai.types.generation_types.BlockedPromptException as e:
@@ -133,7 +149,7 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,args):
                                     print(str(e))
                                     time.sleep(1) #sensechat 2 minimax 5
                                     cnt+=1
-                    assert len(response)==5
+                    assert len(response)==answer_num
                     result = {"id":row["id"],
                             "dataset":dataset,
                                 "model":model,
@@ -170,6 +186,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_workers', default=32, type=int)
     parser.add_argument('--retry_times', default=1, type=int)
     parser.add_argument('--max_new_tokens', default=100, type=int)
+    parser.add_argument('--answer_num', default=1, type=int)
     args = parser.parse_args()
 
     limit=args.limit
@@ -181,6 +198,7 @@ if __name__ == "__main__":
     model = args.model
     dataset = args.dataset
     lang = args.lang
+    answer_num=args.answer_num
 
     if lang=='en':
         unks = """Can't answer.
@@ -207,10 +225,9 @@ if __name__ == "__main__":
     unks = [unk.strip() for unk in unks]
 
     if any([i in model for i in ['qwen','openbuddy','alpaca','llama','internlm','baichuan','chatglm']]):
-        generator=OpenGenerator()
+        generator=OpenGenerator(model)
     else:
-        generator=Generator()
-    client = generator.build_client(model)
+        generator=Generator(model)
 
     if not os.path.exists(f"{output_dir}/{model}"):
         os.makedirs(f"{output_dir}/{model}")
@@ -268,7 +285,7 @@ if __name__ == "__main__":
 
     print(f'Inference {model}...')
     with ThreadPoolExecutor(max_workers=num_workers) as executor:
-        futures = [executor.submit(generate_one,num_existing_result,index,row,lang,dataset,unks,prompt_map,args) for index, row in enumerate(data)]
+        futures = [executor.submit(generate_one,num_existing_result,index,row,lang,dataset,unks,prompt_map,answer_num,args) for index, row in enumerate(data)]
         write_index=0
         write_thread = threading.Thread(target=write_results)
         write_thread.start()

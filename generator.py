@@ -7,6 +7,10 @@ import json
 import google.generativeai as genai
 
 class Generator():
+    def __init__(self,model):
+        self.model=model
+        self.client=self.build_client(self.model)
+
     def build_client(self,model):
         if 'gpt' in model:
             openai.api_type = "azure"
@@ -42,17 +46,17 @@ class Generator():
             client = genai.GenerativeModel('gemini-pro')
         return client
 
-    def chat_completion(self,client,model,user_prompt,system_info='',n=1,max_tokens=1024, temperature=0.9, top_p=0.95, timeout=60):
+    def chat_completion(self,user_prompt,system_info='',n=1,max_tokens=1024, temperature=0.9, top_p=0.95, timeout=60):
         message=[]
-        if 'gpt' in model:
+        if 'gpt' in self.model:
             mapping={'gpt-3.5-turbo-1106':"gpt-35-turbo-1106",
                    'gpt-3.5-turbo-0125':"gpt-35-turbo-0125",
                    'gpt-4-turbo':'gpt-4-turbo'}
-            model=mapping[model]
+            model=mapping[self.model]
             if system_info:
                 message.append({"role": "system","content": system_info})
             message.append({"role": "user","content": user_prompt})
-            response = client.ChatCompletion.create(
+            response = self.client.ChatCompletion.create(
                     messages=message,
                     engine=model,
                     temperature=temperature,
@@ -62,22 +66,23 @@ class Generator():
                     n=n,
                 )
             if n==1:
-                result = response.choices[0].message.content
+                result = [response.choices[0].message.content]
+                # print(result)
             else:
                 result= [choice.message.content for choice in response["choices"]]
         
-        elif "qwen-turbo" in model:
+        elif "qwen-turbo" in self.model:
             if system_info:
                 message.append({"role": "system","content": system_info})
             message.append({"role": "user","content": user_prompt})
-            response = client.Generation.call(
+            response = self.client.Generation.call(
                     "qwen-turbo",
                     messages=message,
                     result_format='message',
                 )
             result=response["output"]["choices"][0]["message"]["content"]
         
-        elif "gemini" in model:
+        elif "gemini" in self.model:
             input_text=system_info + '\n' if system_info else ''
             input_text += user_prompt + '\n'
             config = {"max_output_tokens": max_tokens, "temperature": temperature, "top_p": top_p}
@@ -120,14 +125,14 @@ class Generator():
                 "safetySettings": safety_settings,
                 "generationConfig": config
             }
-            response = requests.post(url, headers=headers, json=data)
-            response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
+            response = requests.post(url, headers=headers, json=data,timeout=timeout)
+            # response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
             if "promptFeedback" in response.json() and response.json()["promptFeedback"]["blockReason"]=='OTHER':
                 raise genai.types.generation_types.BlockedPromptException
-            # print(response.json())
+            print(response.json())
             result = response.json()["candidates"][0]["content"]["parts"][0]["text"]
             
-        elif "minimax" in model:
+        elif "minimax" in self.model:
             if not system_info:
                 system_info='你是一款由MiniMax自研的，没有调用其他产品的接口的大型语言模型。MiniMax是一家中国科技公司，一直致力于进行大模型相关的研究。'
             message.append({
@@ -154,11 +159,11 @@ class Generator():
             result = response["choices"][0]["messages"][0]["text"]
             print(result)
 
-        elif 'glm-4' in model:
+        elif 'glm-4' in self.model:
             if system_info:
                 message.append({"role": "system","content": system_info})
             message.append({"role": "user","content": user_prompt})
-            response = client.chat.completions.create(
+            response = self.client.chat.completions.create(
                         model=model,
                         messages = message,
                         temperature=temperature,
@@ -167,20 +172,20 @@ class Generator():
                     )
             result = response.choices[0].message.content
 
-        elif "ernie" in model:
+        elif "ernie" in self.model:
             message=[{"role": "user","content": user_prompt}]
-            response = client.ChatCompletion.create(
+            response = self.client.ChatCompletion.create(
                         model="ernie-3.5",
                         messages=message,
                         system=system_info,
                     )
             result = response.get_result()
 
-        elif 'sensechat' in model:
+        elif 'sensechat' in self.model:
             if system_info:
                 message.append({"role": "system","content": system_info})
             message.append({"role": "user","content": user_prompt})
-            response = client.ChatCompletion.create(
+            response = self.client.ChatCompletion.create(
                     model="SenseChat",
                     messages=message,
                     max_new_tokens=max_tokens,
@@ -192,9 +197,8 @@ class Generator():
         
 
 if __name__ == "__main__":
-    model='minimax' #minimax/glm-4/sensechat/ernie/gpt-3.5/qwen-turbo
-    generator=Generator()
-    client = generator.build_client(model)
+    model='ernie' #minimax/glm-4/sensechat/ernie/gpt-3.5/qwen-turbo
+    generator=Generator(model)
     user_prompt='今天是几号'
     user_prompt="""
 Answer the single choice question below, only return the letter you choose.
@@ -205,7 +209,7 @@ B: Unknown.
 C: The poor are really ignorant about how to handle the money they do have.
 
 Answer:"""
-    response=generator.chat_completion(client,model,user_prompt)
+    response=generator.chat_completion(user_prompt)
     print(response)
     # while True:
     #     try:
