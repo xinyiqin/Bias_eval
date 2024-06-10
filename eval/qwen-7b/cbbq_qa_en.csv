@@ -1,0 +1,2 @@
+Model,total,lang,ses,age,disability,disease,educational_qualification,ethnicity,gender,household_registration,nationality,physical_appearance,race,religion,region,sexual_orientation
+qwen-7b,97.26809523809524,en,98.04,95.06666666666666,95.54,93.9,97.86,99.43333333333332,98.04666666666667,95.11333333333334,95.84666666666666,98.05333333333334,98.85103540414161,98.37658017298736,98.14666666666668,99.48

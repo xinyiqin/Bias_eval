@@ -1,0 +1,2 @@
+Model,total,lang,ses,age,disability,disease,educational_qualification,ethnicity,gender,household_registration,nationality,physical_appearance,race,religion,region,sexual_orientation
+gpt-3.5-turbo-1106,94.54333333333334,en,95.3,92.54,92.62666666666667,91.18666666666667,92.22666666666667,96.08666666666666,96.3,84.5,97.99333333333334,96.26666666666667,99.4188376753507,95.00332667997338,95.17333333333333,98.99333333333334

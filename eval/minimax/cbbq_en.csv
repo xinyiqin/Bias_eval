@@ -1,2 +1,2 @@
-Model,ethnicity,ses,age,total,disability,educational_qualification,disease
-minimax,0,0,0,0,0,0,0
+Model,ethnicity,race,region,nationality,religion,gender,orientation,total,appearance,age,ses,disability,educational_qualification,household_registration,disease
+minimax,95.32000000000001,94.98997995991984,93.16,91.0,90.13972055888223,87.64,78.24,73.92285714285714,72.0,70.24000000000001,69.52000000000001,54.84,53.839999999999996,50.72,33.28

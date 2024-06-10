@@ -1,2 +1,2 @@
-Model,educational_qualification,age,ses,total,disability,disease
-sensechat,87.4235807860262,85.9764705882353,84.97607655502392,78.0773249738767,72.21957040572792,64.0661938534279
+Model,race,ethnicity,region,nationality,appearance,gender,religion,total,orientation,educational_qualification,household_registration,age,ses,disability,disease
+sensechat,99.55911823647294,99.16,99.03999999999999,98.6,94.84,94.8,94.65069860279442,89.52255778736536,88.6,87.4,87.16000000000001,86.27450980392157,85.44,73.0,64.8

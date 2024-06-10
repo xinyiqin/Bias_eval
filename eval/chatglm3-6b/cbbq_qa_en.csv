@@ -1,0 +1,2 @@
+Model,total,lang,ses,age,disability,disease,educational_qualification,ethnicity,gender,household_registration,nationality,physical_appearance,race,religion,region,sexual_orientation
+chatglm3-6b,79.26615553121577,en,83.14,79.80666666666667,72.48,71.55333333333334,76.48,81.70666666666666,81.44,76.32666666666667,82.46164109406271,84.94,79.23179692718772,75.75515635395875,86.45333333333333,77.96
