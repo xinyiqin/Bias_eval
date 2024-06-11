@@ -39,7 +39,7 @@ def plot(dataset,data_path):
     ]
 
     for i in range(len(models)):
-        en_stats_data = en_values[i].tolist()
+        en_stats_data = [round(data,2) for data in en_values[i].tolist()]
         fig.add_trace(go.Scatterpolar(
             r=en_stats_data,
             theta=angles,
@@ -50,7 +50,7 @@ def plot(dataset,data_path):
             marker=dict(color=colors[i], symbol='circle', size=8, line=dict(color='white', width=1.5)),  # 设置标记颜色
             hovertemplate=f'{models[i]} - English<br>' + '<br>'.join([f'{feature}: {en_stats_data[i]}' for i, feature in enumerate(features)]),
         ))
-        zh_stats_data = zh_values[i].tolist()
+        zh_stats_data = [round(data,2) for data in zh_values[i].tolist()]
         fig.add_trace(go.Scatterpolar(
             r=zh_stats_data,
             theta=angles,
@@ -119,6 +119,11 @@ def plot(dataset,data_path):
     leaderboard_data['Rank_en'] = leaderboard_data[('total',"en")].rank(ascending=False).astype(int)
     leaderboard_data['Rank_zh'] = leaderboard_data[('total',"zh")].rank(ascending=False).astype(int)
     leaderboard_data = leaderboard_data.sort_values('Rank_en')
+
+    # 舍入到两位小数
+    for col in leaderboard_data.columns:
+        if leaderboard_data[col].dtype == float:
+            leaderboard_data[col] = leaderboard_data[col].round(2)
     print(leaderboard_data)
     leaderboard_html = """
     <!DOCTYPE html>
