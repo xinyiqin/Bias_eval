@@ -139,7 +139,7 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,answer
                             while cnt<=5:
                                 try:
                                     response.append(generator.chat_completion(user_prompt,max_tokens=args.max_new_tokens,system_info=system_prompt,temperature=0.7))
-                                    time.sleep(1) #sensechat 1 minimax 5
+                                    time.sleep(5) #sensechat 1 minimax 5
                                     break
                                 except genai.types.generation_types.BlockedPromptException as e:
                                     print('gemini block')
@@ -147,7 +147,7 @@ def generate_one(num_existing_result,idx,row,lang,dataset,unks,prompt_map,answer
                                 except Exception as e:
                                     print('sleep 2s')
                                     print(str(e))
-                                    time.sleep(1) #sensechat 2 minimax 5
+                                    time.sleep(5) #sensechat 2 minimax 5
                                     cnt+=1
                     assert len(response)==answer_num
                     result = {"id":row["id"],

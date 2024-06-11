@@ -1,10 +1,10 @@
 source global.sh
 
 # belle-7b-2m/internlm2-20b/internlm2-1-8b/qwen-7b/openbuddy-70b/chatglm3-6b/baichuan2-13b/chinese-alpaca-2-7b/llama2-chinese
-MODEL=glm-4 #gemini/minimax/glm-4/sensechat/ernie/gpt-4o/gpt-4-turbo/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125/qwen-turbo/
+MODEL=minimax #gemini/minimax/glm-4/sensechat/ernie/gpt-4o/gpt-4-turbo/gpt-3.5-turbo-1106/gpt-3.5-turbo-0125/qwen-turbo/
 DATASET=bbq #stereoset/bbq/crowspairs/cbbq
 # LANG=zh #en/zh
-NUM_WORKERS=20
+NUM_WORKERS=1
 
 for dataset in bbq
 do
