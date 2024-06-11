@@ -56,13 +56,12 @@ if __name__ == "__main__":
     # 将排行榜数据写入 HTML 文件
     
     combined_df = pd.concat(all_leaderboard_data)
-    ranking_table = pd.pivot_table(combined_df, values=['Rank_en','Rank_zh','total_en','total_zh'], index='Model', columns=['Dataset'], aggfunc='first')
-    ranking_table.columns = ranking_table.columns.swaplevel(0, 2)
-    ranking_table.columns = ranking_table.columns.droplevel(1)
-    ranking_table.sort_index(axis=1, inplace=True)
+    ranking_table = combined_df.pivot(index='Model', columns='Dataset')
 
-    # ranking_table['Total_Sum'] = ranking_table.sum(axis=1)
-    # ranking_table_sorted = ranking_table.sort_values(by='Total_Sum', ascending=True)
+    columns=list(ranking_table.columns)
+    ranking_table=ranking_table[list(ranking_table.columns)]
+    ranking_table.columns = pd.MultiIndex.from_tuples([(col[2], col[0]) for col in columns])
+    ranking_table.sort_index(axis=1, inplace=True)
 
     cols_to_sum = [col for col in ranking_table.columns if 'total_en' not in col and 'total_zh' not in col]
     ranking_table['Total_Sum'] = ranking_table[cols_to_sum].sum(axis=1)
