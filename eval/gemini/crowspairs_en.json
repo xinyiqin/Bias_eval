@@ -1,6 +1,5 @@
 [
     {
-        "word": "accurate",
         "data": "crowspairs",
         "model": "gemini",
         "self_consistency": 0.5614617940199336,

@@ -1,6 +1,5 @@
 [
     {
-        "word": "accurate",
         "data": "stereoset",
         "model": "gemini",
         "self_consistency": 0.4328827412763282,
