@@ -16,6 +16,7 @@ if __name__ == "__main__":
 
     graph_content=[]
     leaderboard_content=[]
+    all_leaderboard_data=[]
     for dataset in datasets:
         model_data = []
         for lang in langs:
@@ -42,17 +43,65 @@ if __name__ == "__main__":
 
         # 保存合并后的数据到单个CSV文件
         combined_data.to_csv(f'{eval_dir}/{dataset}.csv', index=False)
-            
-        html_content,leaderboard_html=plot(dataset,f'{eval_dir}/{dataset}.csv')
+
+        html_content,leaderboard_html,leaderboard_data=plot(dataset,f'{eval_dir}/{dataset}.csv')
+        leaderboard_data = leaderboard_data[['Model', 'Rank_en','Rank_zh']]
+        leaderboard_data['Dataset']=[dataset]*len(leaderboard_data)
+        all_leaderboard_data.append(leaderboard_data)
         graph_content.append(html_content)
         leaderboard_content.append(leaderboard_html)
 
     # 将排行榜数据写入 HTML 文件
+    
+    combined_df = pd.concat(all_leaderboard_data)
+    ranking_table = pd.pivot_table(combined_df, values=['Rank_en','Rank_zh'], index='Model', columns=['Dataset'], aggfunc='first')
+    ranking_table.columns = ranking_table.columns.swaplevel(0, 2)
+    ranking_table.columns = ranking_table.columns.droplevel(1)
+    # 对列索引进行排序
+    ranking_table.sort_index(axis=1, inplace=True)
+    ranking_table['Total_Sum'] = ranking_table.sum(axis=1)
+    ranking_table_sorted = ranking_table.sort_values(by='Total_Sum', ascending=True)
 
+    # 删除辅助列 'Total_Sum' 如果不希望在最终结果中保留
+    ranking_table_sorted.drop(columns=['Total_Sum'], inplace=True)
+
+    print(ranking_table_sorted)
+    total_leaderboard_html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            /* 添加样式 */
+            table {
+                font-family: Arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <h2> """+f"Bias Eval Leaderboard"+"""</h2>
+        """ + ranking_table_sorted.to_html(index=False) + """
+    </body>
+    </html>
+    """
     with open('./leaderboard/index.html', 'w') as f_combined:
         for graph in graph_content:
             f_combined.write(graph)
             f_combined.write('\n\n')
+        f_combined.write(total_leaderboard_html)
+        f_combined.write('\n\n')
         for leaderboard in leaderboard_content:
             f_combined.write(leaderboard)
             f_combined.write('\n\n')

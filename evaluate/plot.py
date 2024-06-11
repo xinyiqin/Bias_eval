@@ -155,5 +155,5 @@ def plot(dataset,data_path):
     </body>
     </html>
     """
-    return html_content,leaderboard_html
+    return html_content,leaderboard_html,leaderboard_data
 
