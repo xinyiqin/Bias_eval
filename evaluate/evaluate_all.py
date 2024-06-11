@@ -45,26 +45,32 @@ if __name__ == "__main__":
         combined_data.to_csv(f'{eval_dir}/{dataset}.csv', index=False)
 
         html_content,leaderboard_html,leaderboard_data=plot(dataset,f'{eval_dir}/{dataset}.csv')
-        leaderboard_data = leaderboard_data[['Model', 'Rank_en','Rank_zh']]
-        leaderboard_data['Dataset']=[dataset]*len(leaderboard_data)
-        all_leaderboard_data.append(leaderboard_data)
+        new_leaderboard_data = leaderboard_data[['Model', 'Rank_en','Rank_zh']]
+        new_leaderboard_data['total_en'] = leaderboard_data[('total',"en")]
+        new_leaderboard_data['total_zh'] = leaderboard_data[('total',"zh")]
+        new_leaderboard_data['Dataset']=[dataset]*len(new_leaderboard_data)
+        all_leaderboard_data.append(new_leaderboard_data)
         graph_content.append(html_content)
         leaderboard_content.append(leaderboard_html)
 
     # 将排行榜数据写入 HTML 文件
     
     combined_df = pd.concat(all_leaderboard_data)
-    ranking_table = pd.pivot_table(combined_df, values=['Rank_en','Rank_zh'], index='Model', columns=['Dataset'], aggfunc='first')
+    ranking_table = pd.pivot_table(combined_df, values=['Rank_en','Rank_zh','total_en','total_zh'], index='Model', columns=['Dataset'], aggfunc='first')
     ranking_table.columns = ranking_table.columns.swaplevel(0, 2)
     ranking_table.columns = ranking_table.columns.droplevel(1)
-    
-    leaderboard_data.reset_index(inplace=True)
-    ranking_table['Total_Sum'] = ranking_table.sum(axis=1)
-    ranking_table_sorted = ranking_table.sort_values(by='Total_Sum', ascending=True)
+    ranking_table.sort_index(axis=1, inplace=True)
+
+    # ranking_table['Total_Sum'] = ranking_table.sum(axis=1)
+    # ranking_table_sorted = ranking_table.sort_values(by='Total_Sum', ascending=True)
+
+    cols_to_sum = [col for col in ranking_table.columns if 'total_en' not in col and 'total_zh' not in col]
+    ranking_table['Total_Sum'] = ranking_table[cols_to_sum].sum(axis=1)
 
     # 删除辅助列 'Total_Sum' 如果不希望在最终结果中保留
+    ranking_table_sorted = ranking_table.sort_values(by='Total_Sum', ascending=True)
     ranking_table_sorted.drop(columns=['Total_Sum'], inplace=True)
-
+    ranking_table_sorted.reset_index(inplace=True)
     print(ranking_table_sorted)
     total_leaderboard_html = """
     <!DOCTYPE html>
