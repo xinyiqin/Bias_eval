@@ -57,8 +57,8 @@ if __name__ == "__main__":
     ranking_table = pd.pivot_table(combined_df, values=['Rank_en','Rank_zh'], index='Model', columns=['Dataset'], aggfunc='first')
     ranking_table.columns = ranking_table.columns.swaplevel(0, 2)
     ranking_table.columns = ranking_table.columns.droplevel(1)
-    # 对列索引进行排序
-    ranking_table.sort_index(axis=1, inplace=True)
+    
+    leaderboard_data.reset_index(inplace=True)
     ranking_table['Total_Sum'] = ranking_table.sum(axis=1)
     ranking_table_sorted = ranking_table.sort_values(by='Total_Sum', ascending=True)
 
