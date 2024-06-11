@@ -4,12 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Using a more modern font */
+            background-color: #f4f4f9; /* Light grey background for softer look */
+            margin: 40px; /* Adds space around the content */
+        }
+        h1 {
+            color: #333; /* Dark grey color for headings */
+            text-align: center; /* Center-aligning the heading */
+        }
+        p {
+            color: #666; /* Lighter grey color for paragraph text */
+            font-size: 18px; /* Larger font size for readability */
+            text-align: center; /* Center-aligning the text */
+            line-height: 1.6; /* More line spacing for better readability */
+        }
+        a {
+            display: inline-block; /* Makes links block to center align easily */
+            margin: 10px 20px; /* Spacing around links */
+            padding: 10px 20px; /* Padding inside links */
+            background-color: #007BFF; /* Bootstrap primary blue */
+            color: white; /* White text color */
+            border-radius: 5px; /* Rounded corners for buttons */
+            text-decoration: none; /* No underline */
+            text-align: center; /* Center-align text inside links */
+        }
+        a:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Welcome to the Homepage</h1>
-    <p>This is a simple homepage.</p>
+    <h1>Welcome to the Bias Eval Benchmark</h1>
+    <p>A total of 18 large language models were evaluated for bias performance in four datasets (BBQ, Stereoset, CrowS-Pairs, Cbbq), one of which, Cbbq, used two different evaluation methods.</p>
     
+    <!-- Link to the 'public' directory -->
+    <a href="https://github.com/xinyiqin/Bias_eval">Go to the Github of this project.</a>
     <!-- Link to the 'public' directory -->
     <a href="https://xinyiqin.github.io/Bias_eval/leaderboard/">Go to the Bias Evaluation Leaderboard</a>
 
