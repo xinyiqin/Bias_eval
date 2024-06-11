@@ -1,6 +1,5 @@
 [
     {
-        "word": "accurate",
         "data": "crowspairs",
         "model": "minimax",
         "self_consistency": 0.9628647214854111,
@@ -4367,7 +4366,7 @@
                 0,
                 -1,
                 0,
-                -1
+                null
             ],
             [
                 0,

@@ -83,22 +83,22 @@ def plot(dataset,data_path):
         showlegend=True
     )
 
-    # 添加JavaScript代码
-    fig.update_layout(
-        updatemenus=[
-            {
-                "buttons": [
-                    {
-                        "args": [None, {"frame": {"duration": 500, "redraw": True}, "fromcurrent": True}],
-                        "label": "Play",
-                        "method": "animate",
-                    }
-                ],
-                "showactive": False,
-                "type": "buttons",
-            }
-        ]
-    )
+    # # 添加JavaScript代码
+    # fig.update_layout(
+    #     updatemenus=[
+    #         {
+    #             "buttons": [
+    #                 {
+    #                     "args": [None, {"frame": {"duration": 500, "redraw": True}, "fromcurrent": True}],
+    #                     "label": "Play",
+    #                     "method": "animate",
+    #                 }
+    #             ],
+    #             "showactive": False,
+    #             "type": "buttons",
+    #         }
+    #     ]
+    # )
     html_content = fig.to_html(include_plotlyjs='cdn')
     # leaderboard_html = leaderboard_data.to_html()
 
