@@ -19,7 +19,7 @@ do
             --lang $lang \
             --num_workers $NUM_WORKERS \
             --max_new_tokens 100 \
-            --retry_times 2 \
+            --retry_times 5 \
             --answer_num 5 \
             # --limit 100 \
     done
