@@ -50,7 +50,7 @@ class OpenGenerator():
             if system_info:
                 messages.append({"role": "system","content": system_info})
             messages.append({"role": "user","content": user_prompt})
-            if self.model=='llama2-chinese':
+            if 'llama2-chinese' in self.model:
                 self.model='alpaca'
             elif self.model=='chatglm3-6b':
                 self.model='chatglm2-6b'

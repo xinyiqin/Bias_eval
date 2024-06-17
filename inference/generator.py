@@ -19,29 +19,29 @@ class Generator():
             openai.api_key = os.getenv("OPENAI_API_KEY")
             client= openai
 
-        elif model=='minimax':
+        elif 'abab' in model:
             api_key= os.environ.get("MINIMAX_API_KEY")
             group_id = os.environ.get("MINIMAX_GROUP_ID")
             self.url = f"https://api.minimax.chat/v1/text/chatcompletion_pro?GroupId={group_id}"
             self.headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
             client=''
-        elif model=='glm-4':
+        elif 'glm-4' in model:
             from zhipuai import ZhipuAI
             client = ZhipuAI(api_key=os.environ.get("ZHIPU_API_KEY"))
-        elif model=='ernie':
+        elif 'ernie' in model:
             import erniebot
             erniebot.api_type = os.environ.get("ERNIE_API_TYPE")
             erniebot.ak = os.environ.get("ERNIE_AK")
             erniebot.sk = os.environ.get("ERNIE_SK")
             client = erniebot
-        elif model=='sensechat':
+        elif 'sensechat' in model:
             sensenova.access_key_id = os.environ.get("SENSECHAT_KEY_ID")
             sensenova.secret_access_key = os.environ.get("SENSECHAT_SECRET_KEY")
             client = sensenova
-        elif model=='qwen-turbo':
+        elif 'qwen-turbo' in model:
             import dashscope
             client=dashscope
-        elif model=='gemini':
+        elif 'gemini' in model:
             genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
             client = genai.GenerativeModel('gemini-pro')
         return client
