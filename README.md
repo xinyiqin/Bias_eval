@@ -1,8 +1,21 @@
-# BiasEval: A Comprehensive Bias Evaluation on Generative AI
+# BiasEval: A Cross-language Bias Evaluation on Large Language Models
 
 This repository contains the code and data for bias evaluation with *BiasEval*.
 
+This *BiasEval* project assesses 18 diverse LLMs developed in various countries, using four bias benchmark datasets, across two linguistic settings (English and Chinese), and employing two assessment methods: Single-Choice and Open-Question assessments.
+
 💡 BiasEval leaderboard: [BiasEval Leaderboard](https://xinyiqin.github.io/Bias_eval/leaderboard/).
+
+
+## Setup and install Dependencies
+
+Before evaluation, you should clone our code and install dependencies using the following command: 
+
+```bash
+git clone https://github.com/xinyiqin/Bias_eval.git
+cd Bias_eval-main
+pip install -r requirements.txt
+```
 
 ## API keys
 If you want to reproduce the evaluation results of a specific model involved in this project, please fill the corresponding api keys in `.global.sh` file.
