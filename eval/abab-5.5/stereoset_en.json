@@ -1,7 +1,7 @@
 [
     {
         "data": "stereoset",
-        "model": "minimax",
+        "model": "abab-5.5",
         "self_consistency": 0.8260664993726474,
         "bounds": [
             0.8167599307598516,

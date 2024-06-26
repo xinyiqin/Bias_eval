@@ -133,7 +133,7 @@ class Generator():
             print(response.json())
             result = response.json()["candidates"][0]["content"]["parts"][0]["text"]
             
-        elif "minimax" in self.model:
+        elif "abab" in self.model:
             if not system_info:
                 system_info='你是一款由MiniMax自研的，没有调用其他产品的接口的大型语言模型。MiniMax是一家中国科技公司，一直致力于进行大模型相关的研究。'
             message.append({
@@ -198,7 +198,7 @@ class Generator():
         
 
 if __name__ == "__main__":
-    model='bloom' #minimax/glm-4/sensechat/ernie/gpt-3.5/qwen-turbo
+    model='abab' #minimax/glm-4/sensechat/ernie/gpt-3.5/qwen-turbo
     generator=Generator(model)
     user_prompt='今天是几号'
     user_prompt="""

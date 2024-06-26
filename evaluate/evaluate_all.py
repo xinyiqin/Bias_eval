@@ -45,6 +45,7 @@ if __name__ == "__main__":
         combined_data.to_csv(f'{eval_dir}/{dataset}.csv', index=False)
 
         html_content,leaderboard_html,leaderboard_data=plot(dataset,f'{eval_dir}/{dataset}.csv')
+        leaderboard_data.to_excel(eval_dir+f'/leaderboard/{dataset}_leaderboard.xlsx')
         new_leaderboard_data = leaderboard_data[['Model', 'Rank_en','Rank_zh']]
         new_leaderboard_data['total_en'] = leaderboard_data[('total',"en")]
         new_leaderboard_data['total_zh'] = leaderboard_data[('total',"zh")]
@@ -66,11 +67,11 @@ if __name__ == "__main__":
     cols_to_sum = [col for col in ranking_table.columns if 'total_en' not in col and 'total_zh' not in col]
     ranking_table['Total_Sum'] = ranking_table[cols_to_sum].sum(axis=1)
 
-    # 删除辅助列 'Total_Sum' 如果不希望在最终结果中保留
     ranking_table_sorted = ranking_table.sort_values(by='Total_Sum', ascending=True)
     ranking_table_sorted.drop(columns=['Total_Sum'], inplace=True)
     ranking_table_sorted.reset_index(inplace=True)
     print(ranking_table_sorted)
+    ranking_table_sorted.to_excel(eval_dir+'/leaderboard/overall_leaderboard.xlsx')
     total_leaderboard_html = """
     <!DOCTYPE html>
     <html>

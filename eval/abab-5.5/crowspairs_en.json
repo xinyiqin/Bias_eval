@@ -1,7 +1,7 @@
 [
     {
         "data": "crowspairs",
-        "model": "minimax",
+        "model": "abab-5.5",
         "self_consistency": 0.9628647214854111,
         "bounds": [
             0.9321832699866238,

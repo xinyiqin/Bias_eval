@@ -6,7 +6,6 @@ def plot(dataset,data_path):
     # 从CSV文件中读取数据
     data = pd.read_csv(data_path)
     print(dataset)
-    print(data)
     data = data[['total'] + [col for col in data.columns if col != 'total']]
     data = data[['lang'] + [col for col in data.columns if col != 'lang']]
     models=data['Model'].unique().tolist()
