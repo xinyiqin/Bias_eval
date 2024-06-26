@@ -4,9 +4,6 @@ This repository contains the code and data for bias evaluation with *BiasEval*.
 
 💡 BiasEval leaderboard: [BiasEval Leaderboard](https://xinyiqin.github.io/Bias_eval/leaderboard/).
 
-## How to Use this Code
-For bias evaluation with RedditBias, please use Evaluation/measure_bias.py. The rest of the code you can find in this repository documents the data set creation and offers other useful functions.
-
 ## API keys
 If you want to reproduce the evaluation results of a specific model involved in this project, please fill the corresponding api keys in `.global.sh` file.
 
