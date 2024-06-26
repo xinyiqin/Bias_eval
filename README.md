@@ -9,11 +9,10 @@ If you want to reproduce the evaluation results of a specific model involved in 
 
 ## Dataset
 
-The evaluation datasets are now stored in the `./data` folder. The possible answers are stored in the `./expr` folder. 
+The evaluation datasets are now stored in the `./data` folder. 
 
+The possible answers are stored in the `./expr` folder. 
 
-
-To generate leaderboard statistics, there are two steps:
 
 ## Inference
 
@@ -21,11 +20,13 @@ To generate leaderboard statistics, there are two steps:
 1. Inference a specific model on a specific dataset and a specific language:
 
 For example, inference gpt-4o on crowspairs dataset in English with 32 workers, you should run:
+
 ```bash
 bash inference.sh gpt-4o crowspairs en 32
 ```
 
 2. Inference a specific model on multiple datasets and multiple languages, run:
+
 ```bash
 bash inference.sh gpt-4o "crowspairs stereoset bbq cbbq" "en zh" 32
 ```
@@ -42,6 +43,7 @@ bash inference_qa.sh gpt-4o cbbq "en zh" 32
 You can evaluate multiple models on multiple dataset and multiple languages. 
 
 For example:
+
 ```bash
 bash evaluate.sh "abab-5.5 qwen-7b" "crowspairs stereoset" "en zh"
 ```
@@ -52,9 +54,11 @@ The evaluation results will be stored in the `./eval` folder.
 You can evaluate multiple models on multiple languages. You can use any gpt model as the evaluator. 
 
 For example, we use gpt-4o as the evaluator:
+
 ```bash
 bash gpt_evaluate.sh "ernie-3.5" gpt-4o-2024-05-13 "en zh" cbbq 6
 ```
+
 The evaluation results will be stored in the `./eval` folder.
 
 ## Ranking
@@ -68,4 +72,5 @@ The ranking excel will be stored in the `./eval/leaderboard` folder.
 
 
 ## Evaluation for your model
+
 Add the model inference code to the `./inference/generator` file or `./inference/generator_open_source` file.
